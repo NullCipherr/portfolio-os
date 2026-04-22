@@ -83,14 +83,17 @@ interface PortfolioContent {
   contact: {
     title: string;
     subtitle: string;
-    successTitle: string;
-    successMessage: string;
-    submitLabel: string;
-    fields: {
-      name: { label: string; placeholder: string };
-      email: { label: string; placeholder: string };
-      message: { label: string; placeholder: string };
-    };
+    badge: string;
+    channelsTitle: string;
+    responseTime: string;
+    channels: Array<{
+      id: string;
+      label: string;
+      description: string;
+      cta: string;
+      url: string;
+      external?: boolean;
+    }>;
   };
 }
 
@@ -365,16 +368,37 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
       languages: ['Inglês (Intermediário)', 'Espanhol (Básico)', 'Francês (Básico)'],
     },
     contact: {
-      title: 'Vamos conversar?',
-      subtitle: 'Preencha o formulário abaixo e entrarei em contato o mais rápido possível.',
-      successTitle: 'Mensagem enviada!',
-      successMessage: 'Obrigado pelo contato. Retornarei em breve.',
-      submitLabel: 'Enviar mensagem',
-      fields: {
-        name: { label: 'Nome', placeholder: 'Seu nome completo' },
-        email: { label: 'E-mail', placeholder: 'seu@email.com' },
-        message: { label: 'Mensagem', placeholder: 'Como posso ajudar no seu projeto?' },
-      },
+      title: 'Vamos tirar sua ideia do papel',
+      subtitle: 'Escolha o canal que preferir. Sem formulário e sem fricção.',
+      badge: 'Contato direto',
+      channelsTitle: 'Canais principais',
+      responseTime: 'Tempo médio de resposta: até 24h úteis',
+      channels: [
+        {
+          id: 'github',
+          label: 'GitHub',
+          description: 'Explore projetos reais, histórico técnico e padrões de arquitetura.',
+          cta: 'Abrir perfil',
+          url: 'https://github.com/NullCipherr',
+          external: true,
+        },
+        {
+          id: 'portfolio-repo',
+          label: 'Portfolio OS',
+          description: 'Veja o código-fonte completo deste portfólio e decisões de implementação.',
+          cta: 'Abrir repositório',
+          url: 'https://github.com/NullCipherr/portfolio-os',
+          external: true,
+        },
+        {
+          id: 'whatsapp',
+          label: 'WhatsApp',
+          description: 'Canal rápido para alinhamento inicial, briefing e próximos passos.',
+          cta: 'Iniciar conversa',
+          url: 'https://wa.me/5544991812069',
+          external: true,
+        },
+      ],
     },
   },
   'en-US': {
@@ -519,16 +543,37 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
       languages: ['English (Intermediate)', 'Spanish (Basic)', 'French (Basic)'],
     },
     contact: {
-      title: "Let's talk?",
-      subtitle: 'Fill out the form below and I will get back to you as soon as possible.',
-      successTitle: 'Message sent!',
-      successMessage: 'Thank you for reaching out. I will reply soon.',
-      submitLabel: 'Send message',
-      fields: {
-        name: { label: 'Name', placeholder: 'Your full name' },
-        email: { label: 'Email', placeholder: 'you@email.com' },
-        message: { label: 'Message', placeholder: 'How can I help with your project?' },
-      },
+      title: "Let's turn your idea into execution",
+      subtitle: 'Pick your preferred channel. No forms, no friction.',
+      badge: 'Direct contact',
+      channelsTitle: 'Main channels',
+      responseTime: 'Average response time: within 24 business hours',
+      channels: [
+        {
+          id: 'github',
+          label: 'GitHub',
+          description: 'Review real projects, technical depth, and architecture standards.',
+          cta: 'Open profile',
+          url: 'https://github.com/NullCipherr',
+          external: true,
+        },
+        {
+          id: 'portfolio-repo',
+          label: 'Portfolio OS',
+          description: 'See the full source code of this portfolio and implementation decisions.',
+          cta: 'Open repository',
+          url: 'https://github.com/NullCipherr/portfolio-os',
+          external: true,
+        },
+        {
+          id: 'whatsapp',
+          label: 'WhatsApp',
+          description: 'Fast channel for initial alignment, briefing, and next steps.',
+          cta: 'Start chat',
+          url: 'https://wa.me/5544991812069',
+          external: true,
+        },
+      ],
     },
   },
 };

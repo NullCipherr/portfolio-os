@@ -26,12 +26,28 @@ export const LIGHT_SURFACE_CLASSES: Record<LightSurfaceColor, string> = {
   sky: 'bg-sky-50/90'
 };
 
+export const LIGHT_SURFACE_SOLID_CLASSES: Record<LightSurfaceColor, string> = {
+  white: 'bg-white',
+  cream: 'bg-amber-50',
+  gray: 'bg-gray-100',
+  rose: 'bg-rose-50',
+  sky: 'bg-sky-50'
+};
+
 export const DARK_SURFACE_CLASSES: Record<DarkSurfaceColor, string> = {
   gray: 'dark:bg-gray-900/90',
   slate: 'dark:bg-slate-900/90',
   black: 'dark:bg-black/90',
   zinc: 'dark:bg-zinc-900/90',
   indigo: 'dark:bg-indigo-950/90'
+};
+
+export const DARK_SURFACE_SOLID_CLASSES: Record<DarkSurfaceColor, string> = {
+  gray: 'dark:bg-gray-900',
+  slate: 'dark:bg-slate-900',
+  black: 'dark:bg-black',
+  zinc: 'dark:bg-zinc-900',
+  indigo: 'dark:bg-indigo-950'
 };
 
 interface SettingsContextType {
@@ -53,6 +69,8 @@ interface SettingsContextType {
   setLightSurface: (color: LightSurfaceColor) => void;
   darkSurface: DarkSurfaceColor;
   setDarkSurface: (color: DarkSurfaceColor) => void;
+  windowTransparency: boolean;
+  setWindowTransparency: (enabled: boolean) => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
   uiFont: UIFont;
@@ -80,6 +98,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [pinnedApps, setPinnedApps] = useState<string[]>(() => getSaved('os_pinnedApps', ['browser', 'finder']));
   const [lightSurface, setLightSurface] = useState<LightSurfaceColor>(() => getSaved('os_lightSurface', 'white'));
   const [darkSurface, setDarkSurface] = useState<DarkSurfaceColor>(() => getSaved('os_darkSurface', 'gray'));
+  const [windowTransparency, setWindowTransparency] = useState<boolean>(() => getSaved('os_windowTransparency', true));
   const [locale, setLocale] = useState<Locale>(() => getSaved('os_locale', 'pt-BR'));
   const [uiFont, setUIFont] = useState<UIFont>(() => getSaved('os_uiFont', 'poppins'));
 
@@ -99,6 +118,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     localStorage.setItem('os_darkSurface', JSON.stringify(darkSurface));
   }, [darkSurface]);
+  useEffect(() => {
+    localStorage.setItem('os_windowTransparency', JSON.stringify(windowTransparency));
+  }, [windowTransparency]);
 
   useEffect(() => { localStorage.setItem('os_wallpaper', JSON.stringify(wallpaper)); }, [wallpaper]);
   useEffect(() => { localStorage.setItem('os_iconSize', JSON.stringify(iconSize)); }, [iconSize]);
@@ -123,6 +145,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       pinnedApps, setPinnedApps,
       lightSurface, setLightSurface,
       darkSurface, setDarkSurface,
+      windowTransparency, setWindowTransparency,
       locale, setLocale,
       uiFont, setUIFont
     }}>

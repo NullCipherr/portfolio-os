@@ -46,39 +46,41 @@ interface RenderAppContentParams {
   closeWindow: (appId: AppId) => void;
 }
 
+const DEFAULT_WINDOW_SIZE = { width: 860, height: 640 } as const;
+
 export function useAppRegistry() {
   const { locale } = useSettings();
   const content = getPortfolioContent(locale);
   const text = MESSAGES[locale];
 
   const portfolioApps: AppConfig[] = [
-    { id: 'about', title: content.windows.about, icon: User, defaultSize: { width: 700, height: 550 } },
-    { id: 'projects', title: content.windows.projects, icon: FolderGit2, defaultSize: { width: 800, height: 600 } },
-    { id: 'contact', title: content.windows.contact, icon: Mail, defaultSize: { width: 500, height: 600 } },
-    { id: 'curriculum', title: content.windows.curriculum, icon: FileText, defaultSize: { width: 800, height: 700 } },
+    { id: 'about', title: content.windows.about, icon: User, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'projects', title: content.windows.projects, icon: FolderGit2, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'contact', title: content.windows.contact, icon: Mail, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'curriculum', title: content.windows.curriculum, icon: FileText, defaultSize: DEFAULT_WINDOW_SIZE },
   ];
 
   const toolApps: AppConfig[] = [
-    { id: 'browser', title: text.appTitles.browser, icon: Globe, defaultSize: { width: 900, height: 600 } },
-    { id: 'finder', title: text.appTitles.finder, icon: Folder, defaultSize: { width: 850, height: 550 } },
-    { id: 'personalize', title: text.appTitles.personalize, icon: Settings, defaultSize: { width: 800, height: 500 } },
-    { id: 'terminal', title: text.appTitles.terminal, icon: TerminalIcon, defaultSize: { width: 650, height: 450 } },
-    { id: 'rito', title: text.appTitles.rito, icon: FileTextIcon, defaultSize: { width: 800, height: 600 } },
+    { id: 'browser', title: text.appTitles.browser, icon: Globe, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'finder', title: text.appTitles.finder, icon: Folder, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'personalize', title: text.appTitles.personalize, icon: Settings, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'terminal', title: text.appTitles.terminal, icon: TerminalIcon, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'rito', title: text.appTitles.rito, icon: FileTextIcon, defaultSize: DEFAULT_WINDOW_SIZE },
   ];
 
   const gameApps: AppConfig[] = [
-    { id: 'minesweeper', title: text.appTitles.minesweeper, icon: Bomb, defaultSize: { width: 600, height: 500 }, hideShortcut: true },
-    { id: 'solitaire', title: text.appTitles.solitaire, icon: Spade, defaultSize: { width: 800, height: 600 }, hideShortcut: true },
-    { id: 'pinball', title: text.appTitles.pinball, icon: Rocket, defaultSize: { width: 800, height: 600 }, hideShortcut: true },
+    { id: 'minesweeper', title: text.appTitles.minesweeper, icon: Bomb, defaultSize: DEFAULT_WINDOW_SIZE, hideShortcut: true },
+    { id: 'solitaire', title: text.appTitles.solitaire, icon: Spade, defaultSize: DEFAULT_WINDOW_SIZE, hideShortcut: true },
+    { id: 'pinball', title: text.appTitles.pinball, icon: Rocket, defaultSize: DEFAULT_WINDOW_SIZE, hideShortcut: true },
   ];
 
   const mediaApps: AppConfig[] = [
-    { id: 'music', title: text.appTitles.music, icon: Music, defaultSize: { width: 800, height: 600 } },
-    { id: 'gallery', title: text.appTitles.gallery, icon: ImageIcon, defaultSize: { width: 900, height: 700 } },
+    { id: 'music', title: text.appTitles.music, icon: Music, defaultSize: DEFAULT_WINDOW_SIZE },
+    { id: 'gallery', title: text.appTitles.gallery, icon: ImageIcon, defaultSize: DEFAULT_WINDOW_SIZE },
   ];
 
   const systemApps: AppConfig[] = [
-    { id: 'taskmanager', title: text.appTitles.taskmanager, icon: Activity, defaultSize: { width: 600, height: 500 } },
+    { id: 'taskmanager', title: text.appTitles.taskmanager, icon: Activity, defaultSize: DEFAULT_WINDOW_SIZE },
   ];
 
   const apps = [...portfolioApps, ...toolApps, ...gameApps, ...mediaApps, ...systemApps];

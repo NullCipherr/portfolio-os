@@ -113,12 +113,13 @@ export function Taskbar({
             return (
               <button
                 key={app.id}
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setContextMenu({ appId: app.id, x: rect.left, y: rect.top - 10 });
+                onClick={() => {
+                  setContextMenu(null);
+                  onWindowClick(app.id);
                 }}
                 onContextMenu={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   const rect = e.currentTarget.getBoundingClientRect();
                   setContextMenu({ appId: app.id, x: rect.left, y: rect.top - 10 });
                 }}

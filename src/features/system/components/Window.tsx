@@ -2,12 +2,18 @@
  * features/system/components/Window.tsx
  * Portfolio OS module with a specific architectural responsibility.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useDragControls } from 'motion/react';
 import { Minus, Square, X } from 'lucide-react';
 import { WindowState, AppConfig } from '@/shared/types';
 import { cn } from '@/shared/lib/utils';
-import { useSettings, LIGHT_SURFACE_CLASSES, DARK_SURFACE_CLASSES } from '@/features/system/contexts/SettingsContext';
+import {
+  useSettings,
+  LIGHT_SURFACE_CLASSES,
+  DARK_SURFACE_CLASSES,
+  LIGHT_SURFACE_SOLID_CLASSES,
+  DARK_SURFACE_SOLID_CLASSES
+} from '@/features/system/contexts/SettingsContext';
 
 interface WindowProps {
   windowState: WindowState;
@@ -38,7 +44,14 @@ export function Window({
 }: WindowProps) {
   const dragControls = useDragControls();
   const windowRef = useRef<HTMLDivElement>(null);
-  const { lightSurface, darkSurface } = useSettings();
+  const resizeRafRef = useRef<number | null>(null);
+  const pendingResizeRef = useRef<{
+    size: { width: number; height: number };
+    position: { x: number; y: number };
+    startPosition: { x: number; y: number };
+  } | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const { lightSurface, darkSurface, windowTransparency } = useSettings();
 
   if (windowState.isMinimized) return null;
 
@@ -70,6 +83,7 @@ export function Window({
     
     // Focus window when starting resize
     onFocus();
+    setIsResizing(true);
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -80,6 +94,19 @@ export function Window({
 
     const minWidth = 300;
     const minHeight = 200;
+
+    const flushResizeUpdate = () => {
+      const pending = pendingResizeRef.current;
+      if (!pending) return;
+
+      onSizeChange(pending.size);
+      if (
+        pending.position.x !== pending.startPosition.x ||
+        pending.position.y !== pending.startPosition.y
+      ) {
+        onPositionChange(pending.position);
+      }
+    };
 
     const handlePointerMove = (moveEv: PointerEvent) => {
       let newWidth = startWidth;
@@ -117,15 +144,31 @@ export function Window({
         }
       }
 
-      onSizeChange({ width: newWidth, height: newHeight });
-      if (newX !== startPosX || newY !== startPosY) {
-        onPositionChange({ x: newX, y: newY });
+      pendingResizeRef.current = {
+        size: { width: newWidth, height: newHeight },
+        position: { x: newX, y: newY },
+        startPosition: { x: startPosX, y: startPosY },
+      };
+
+      if (resizeRafRef.current === null) {
+        resizeRafRef.current = window.requestAnimationFrame(() => {
+          flushResizeUpdate();
+          resizeRafRef.current = null;
+        });
       }
     };
 
     const handlePointerUp = () => {
       document.removeEventListener('pointermove', handlePointerMove);
       document.removeEventListener('pointerup', handlePointerUp);
+
+      if (resizeRafRef.current !== null) {
+        window.cancelAnimationFrame(resizeRafRef.current);
+        resizeRafRef.current = null;
+      }
+      flushResizeUpdate();
+      pendingResizeRef.current = null;
+      setIsResizing(false);
     };
 
     document.addEventListener('pointermove', handlePointerMove);
@@ -135,7 +178,14 @@ export function Window({
   return (
     <motion.div
       ref={windowRef}
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{
+        opacity: 0,
+        scale: 0.985,
+        x: targetX,
+        y: targetY,
+        width: targetWidth,
+        height: targetHeight,
+      }}
       animate={{ 
         opacity: 1, 
         scale: 1,
@@ -144,8 +194,19 @@ export function Window({
         width: targetWidth,
         height: targetHeight,
       }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      exit={{ opacity: 0, scale: 0.985 }}
+      transition={
+        isResizing
+          ? { duration: 0 }
+          : {
+              x: { type: 'spring', stiffness: 300, damping: 30 },
+              y: { type: 'spring', stiffness: 300, damping: 30 },
+              width: { type: 'spring', stiffness: 300, damping: 30 },
+              height: { type: 'spring', stiffness: 300, damping: 30 },
+              opacity: { duration: 0.14, ease: 'easeOut' },
+              scale: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
+            }
+      }
       drag={true}
       dragControls={dragControls}
       dragListener={false}
@@ -183,9 +244,12 @@ export function Window({
         willChange: "transform, width, height"
       }}
       className={cn(
-        "absolute flex flex-col overflow-hidden backdrop-blur-xl border border-white/20 dark:border-gray-700/50 shadow-2xl rounded-xl",
-        LIGHT_SURFACE_CLASSES[lightSurface],
-        DARK_SURFACE_CLASSES[darkSurface],
+        "absolute flex flex-col overflow-hidden shadow-2xl rounded-xl",
+        windowTransparency
+          ? "backdrop-blur-xl border border-white/20 dark:border-gray-700/50"
+          : "border border-gray-200 dark:border-gray-700",
+        windowTransparency ? LIGHT_SURFACE_CLASSES[lightSurface] : LIGHT_SURFACE_SOLID_CLASSES[lightSurface],
+        windowTransparency ? DARK_SURFACE_CLASSES[darkSurface] : DARK_SURFACE_SOLID_CLASSES[darkSurface],
         isActive ? "ring-1 ring-black/5 dark:ring-white/10" : "opacity-95"
       )}
     >
@@ -206,7 +270,12 @@ export function Window({
 
       {/* Titlebar */}
       <div
-        className="flex items-center justify-between px-4 py-2 bg-white/50 dark:bg-gray-800/50 border-b border-black/5 dark:border-white/5 select-none touch-none"
+        className={cn(
+          "flex items-center justify-between px-4 py-2 border-b select-none touch-none",
+          windowTransparency
+            ? "bg-white/50 dark:bg-gray-800/50 border-black/5 dark:border-white/5"
+            : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+        )}
         onPointerDown={(e) => dragControls.start(e)}
         onDoubleClick={onMaximize}
       >
