@@ -28,7 +28,6 @@ npm run build
 
 Copy from `.env.example` and set values per environment.
 
-- `GEMINI_API_KEY`
 - `APP_URL`
 
 ## Deployment Workflow

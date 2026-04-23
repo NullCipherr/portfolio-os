@@ -15,7 +15,6 @@
     "sync:github-projects": "node scripts/sync-github-projects.mjs NullCipherr"
   },
   "dependencies": {
-    "@google/genai": "^1.29.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "clsx": "^2.1.1",

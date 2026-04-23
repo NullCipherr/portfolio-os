@@ -222,7 +222,6 @@ npm run preview
 
 Use `.env.example` as baseline:
 
-- `GEMINI_API_KEY`: Gemini API key for AI Studio integrations.
 - `APP_URL`: runtime app URL (for hosted environments).
 
 ---
