@@ -8,24 +8,12 @@ import { cn } from '@/shared/lib/utils';
 import { useToast } from '@/features/system/contexts/ToastContext';
 import { consumePendingPortfolioBrowserUrl, PORTFOLIO_BROWSER_EVENT } from '@/shared/lib/browserNavigation';
 
-const DEFAULT_URL = 'https://example.com/';
-const FRAME_BLOCKED_DOMAINS = [
-  'github.com',
-  'youtube.com',
-  'youtu.be',
-  'linkedin.com',
-  'x.com',
-  'twitter.com',
-  'facebook.com',
-  'instagram.com',
-  'web.whatsapp.com',
-  'docs.google.com',
-  'drive.google.com',
-];
+const DEFAULT_URL = 'https://www.bing.com/';
+const IFRAME_FALLBACK_URL = 'https://www.bing.com/';
 
 export function Browser() {
   const { addToast } = useToast();
-  const [urlInput, setUrlInput] = useState('example.com');
+  const [urlInput, setUrlInput] = useState('www.bing.com');
   const [currentSrc, setCurrentSrc] = useState('');
   const [history, setHistory] = useState<string[]>([DEFAULT_URL]);
   const [historyIndex, setHistoryIndex] = useState(0);
@@ -63,35 +51,20 @@ export function Browser() {
     return trimmed;
   };
 
-  const isLikelyFrameBlocked = (url: string) => {
-    try {
-      const { hostname } = new URL(url);
-      return FRAME_BLOCKED_DOMAINS.some(
-        (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
-      );
-    } catch {
-      return false;
-    }
-  };
-
   const navigateTo = (newUrl: string) => {
     if (!newUrl) return;
     
     setIsLoading(true);
     const formattedUrl = formatUrl(newUrl);
-
-    if (isLikelyFrameBlocked(formattedUrl)) {
-      window.open(formattedUrl, '_blank', 'noopener,noreferrer');
-      addToast('Este site bloqueia visualização em iframe. Aberto em nova aba.', 'info');
-      setIsLoading(false);
-      return;
-    }
+    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+    addToast('Site aberto em nova aba para compatibilidade total.', 'info');
     
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(formattedUrl);
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-    setCurrentSrc(formattedUrl);
+    setCurrentSrc(IFRAME_FALLBACK_URL);
+    setIsLoading(false);
     
     try {
         const urlObj = new URL(formattedUrl);
@@ -109,11 +82,13 @@ export function Browser() {
 
   const goBack = () => {
     if (historyIndex > 0) {
-      setIsLoading(true);
+      const previousUrl = history[historyIndex - 1];
       setHistoryIndex(historyIndex - 1);
-      setCurrentSrc(history[historyIndex - 1]);
+      window.open(previousUrl, '_blank', 'noopener,noreferrer');
+      setCurrentSrc(IFRAME_FALLBACK_URL);
+      setIsLoading(false);
       try {
-        const urlObj = new URL(history[historyIndex - 1]);
+        const urlObj = new URL(previousUrl);
         setUrlInput(urlObj.hostname + urlObj.pathname + urlObj.search);
       } catch {
          // do nothing
@@ -123,11 +98,13 @@ export function Browser() {
 
   const goForward = () => {
     if (historyIndex < history.length - 1) {
-      setIsLoading(true);
+      const nextUrl = history[historyIndex + 1];
       setHistoryIndex(historyIndex + 1);
-      setCurrentSrc(history[historyIndex + 1]);
+      window.open(nextUrl, '_blank', 'noopener,noreferrer');
+      setCurrentSrc(IFRAME_FALLBACK_URL);
+      setIsLoading(false);
       try {
-        const urlObj = new URL(history[historyIndex + 1]);
+        const urlObj = new URL(nextUrl);
         setUrlInput(urlObj.hostname + urlObj.pathname + urlObj.search);
       } catch {
          // do nothing
@@ -146,7 +123,7 @@ export function Browser() {
   };
 
   const goHome = () => {
-    navigateTo('example.com');
+    navigateTo('www.bing.com');
   };
 
   const handleIframeLoad = () => {

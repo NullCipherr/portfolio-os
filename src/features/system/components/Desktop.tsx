@@ -2,7 +2,7 @@
  * features/system/components/Desktop.tsx
  * Portfolio OS module with a specific architectural responsibility.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AppConfig } from '@/shared/types';
 import { cn } from '@/shared/lib/utils';
@@ -70,6 +70,12 @@ export function Desktop({
   };
 
   const [selectionBox, setSelectionBox] = useState<{ startX: number; startY: number; currentX: number; currentY: number } | null>(null);
+  const desktopSafeAreaRef = useRef<HTMLDivElement>(null);
+
+  // Keep desktop shortcuts away from the taskbar area regardless of icon/font settings.
+  const TASKBAR_HEIGHT_PX = 48;
+  const DESKTOP_SAFE_GAP_PX = 20;
+  const safeBottomOffset = `calc(env(safe-area-inset-bottom) + ${TASKBAR_HEIGHT_PX + DESKTOP_SAFE_GAP_PX}px)`;
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).id === "desktop-bg" || e.target === e.currentTarget) {
@@ -116,7 +122,7 @@ export function Desktop({
   return (
     <div 
       id="desktop-bg"
-      className="absolute inset-0 p-4 z-0 overflow-hidden"
+      className="absolute inset-0 z-0 overflow-hidden"
       onContextMenu={onContextMenu}
       onPointerDown={handlePointerDown}
     >
@@ -126,7 +132,13 @@ export function Desktop({
           style={selectionStyle}
         />
       )}
-      <div id="desktop-bg" className="h-full flex flex-col flex-wrap content-start gap-2">
+      <div
+        ref={desktopSafeAreaRef}
+        id="desktop-bg"
+        className="absolute top-4 left-4 right-4 overflow-hidden"
+        style={{ bottom: safeBottomOffset }}
+      >
+      <div className="h-full flex flex-col flex-wrap content-start gap-2">
         {!isRefreshing && sortedApps.map((app) => (
           <motion.button
             layout
@@ -142,6 +154,7 @@ export function Desktop({
             className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white/10 transition-colors focus:outline-none focus:bg-white/20 w-24"
             style={{ willChange: "transform" }}
             drag={iconLayout === 'free'}
+            dragConstraints={iconLayout === 'free' ? desktopSafeAreaRef : undefined}
             dragMomentum={false}
             onDragEnd={(e, info) => {
               if (iconLayout === 'free') {
@@ -162,7 +175,7 @@ export function Desktop({
           </motion.button>
         ))}
       </div>
+      </div>
     </div>
   );
 }
-

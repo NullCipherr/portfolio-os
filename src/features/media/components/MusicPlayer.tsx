@@ -4,7 +4,7 @@
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Music, ListMusic, Activity } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, ListMusic, Activity } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 
 // We use some royalty-free placeholder tracks for the interface
@@ -14,21 +14,21 @@ const TRACKS = [
     title: "Chill Lofi Study",
     artist: "Lofi Vibes",
     cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80",
-    url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
   },
   {
     id: 2,
     title: "Late Night Coding",
     artist: "Synthwave Beats",
     cover: "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=400&q=80",
-    url: "https://cdn.pixabay.com/download/audio/2022/10/25/audio_2eaeb2b9fc.mp3?filename=midnight-forest-124976.mp3"
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
   },
   {
     id: 3,
     title: "Morning Coffee",
     artist: "Acoustic Flow",
     cover: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&q=80",
-    url: "https://cdn.pixabay.com/download/audio/2022/01/21/audio_31743c58bc.mp3?filename=good-morning-124673.mp3"
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
   }
 ];
 
@@ -39,10 +39,14 @@ export function MusicPlayer() {
   const [duration, setDuration] = useState(0);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const failedTrackIdsRef = useRef<Set<number>>(new Set());
 
   const currentTrack = TRACKS[currentTrackIndex];
 
   useEffect(() => {
+    setProgress(0);
+    setDuration(0);
+
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.play().catch(e => console.warn("Autoplay prevented:", e));
@@ -56,6 +60,30 @@ export function MusicPlayer() {
     if (audioRef.current) {
       setProgress(audioRef.current.currentTime);
       setDuration(audioRef.current.duration || 0);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    failedTrackIdsRef.current.delete(currentTrack.id);
+    handleTimeUpdate();
+  };
+
+  const handleAudioError = () => {
+    failedTrackIdsRef.current.add(currentTrack.id);
+
+    if (failedTrackIdsRef.current.size >= TRACKS.length) {
+      setIsPlaying(false);
+      return;
+    }
+
+    for (let step = 1; step <= TRACKS.length; step += 1) {
+      const candidateIndex = (currentTrackIndex + step) % TRACKS.length;
+      const candidateTrack = TRACKS[candidateIndex];
+      if (!failedTrackIdsRef.current.has(candidateTrack.id)) {
+        setCurrentTrackIndex(candidateIndex);
+        setIsPlaying(true);
+        return;
+      }
     }
   };
 
@@ -85,28 +113,26 @@ export function MusicPlayer() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900 text-white font-sans selection:bg-pink-500/30 overflow-hidden">
+    <div className="relative flex flex-col h-full bg-zinc-900 text-white font-sans selection:bg-pink-500/30 overflow-hidden">
       <audio 
         ref={audioRef}
         src={currentTrack.url}
         onTimeUpdate={handleTimeUpdate}
         onEnded={nextTrack}
-        onLoadedMetadata={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onError={handleAudioError}
       />
-      
-      {/* Top Bar */}
-      <div className="flex justify-between items-center p-4 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <Music className="w-5 h-5 text-pink-500" />
-          <span className="font-semibold tracking-tight">Apple Music Lite</span>
-        </div>
-        <button 
-          onClick={() => setShowPlaylist(!showPlaylist)}
-          className={cn("p-2 rounded-full transition-colors", showPlaylist ? "bg-white/20" : "hover:bg-white/10")}
-        >
-          <ListMusic className="w-4 h-4" />
-        </button>
-      </div>
+
+      <button
+        onClick={() => setShowPlaylist(!showPlaylist)}
+        className={cn(
+          'absolute right-4 top-4 z-10 p-2 rounded-full transition-colors',
+          showPlaylist ? 'bg-white/20' : 'hover:bg-white/10'
+        )}
+        aria-label="Alternar playlist"
+      >
+        <ListMusic className="w-4 h-4" />
+      </button>
 
       <div className="flex-1 flex overflow-hidden">
         {/* Main Player Area */}
