@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { ExternalLink, Github, LayoutGrid, List, Star, FolderGit2 } from 'lucide-react';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 import { useSettings } from '@/features/system/contexts/SettingsContext';
 import { cn } from '@/shared/lib/utils';
 import { AppId } from '@/shared/types';
@@ -18,7 +18,7 @@ interface ProjectsProps {
 
 export function Projects({ openWindow }: ProjectsProps) {
   const { locale } = useSettings();
-  const projectsContent = getPortfolioContent(locale).projects;
+  const projectsContent = usePortfolioContent(locale).projects;
   const [activePanel, setActivePanel] = React.useState<ProjectsPanel>('favorites');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   const gridContainerRef = React.useRef<HTMLDivElement>(null);

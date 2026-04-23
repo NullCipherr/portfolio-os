@@ -3,10 +3,11 @@
  * Portfolio OS module with a specific architectural responsibility.
  */
 import { Locale } from '@/shared/i18n/types';
+import React from 'react';
 import { GITHUB_PROJECTS } from '@/features/portfolio/data/githubProjects';
 
 export interface PortfolioProject {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
   image: string;
@@ -95,6 +96,30 @@ interface PortfolioContent {
       external?: boolean;
     }>;
   };
+}
+
+interface ExternalSkillCategory {
+  category: string;
+  items: string[];
+}
+
+interface ExternalProject {
+  id: string;
+  title: string;
+  summary: string;
+  tags?: string[];
+  links?: {
+    github?: string;
+    demo?: string;
+  };
+  image?: string;
+  highlights?: string[];
+  stack?: string[];
+}
+
+interface ExternalProjectsMeta {
+  featured?: string[];
+  order?: string[];
 }
 
 const COMMON_PROJECTS: PortfolioProject[] = GITHUB_PROJECTS;
@@ -235,10 +260,10 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
     },
     about: {
       name: 'Andrei Roberto da Costa',
-      role: 'Desenvolvedor Júnior | Web, IA e Backend Python',
-      bio: 'Desenvolvedor com formação em Ciência da Computação pela UEM, com experiência em aplicações web modernas com React, Node.js e APIs REST. Possuo forte base em Python e Machine Learning, aplicando soluções práticas em automação e análise de dados. Busco minha primeira oportunidade como desenvolvedor júnior para contribuir com soluções eficientes e evoluir continuamente.',
+      role: 'Desenvolvedor | Web, IA e Backend Python',
+      bio: 'Desenvolvedor com formação em Ciência da Computação pela UEM, com experiência em aplicações web modernas com React, Node.js e APIs REST. Possuo forte base em Python e Machine Learning, aplicando soluções práticas em automação e análise de dados. Busco oportunidades para contribuir com soluções eficientes e evoluir continuamente.',
       location: 'Maringá - PR',
-      availability: 'Disponível para oportunidade júnior e freelas',
+      availability: 'Disponível para oportunidades e freelas',
       email: 'arcodeworks@gmail.com',
       technicalSkillsTitle: 'Habilidades Técnicas',
       technicalSkills: [
@@ -278,11 +303,11 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
     },
     curriculum: {
       name: 'Andrei Roberto da Costa',
-      role: 'Desenvolvedor Júnior | Web, IA e Backend Python',
+      role: 'Desenvolvedor | Web, IA e Backend Python',
       downloadLabel: 'Baixar PDF',
       professionalSummaryTitle: 'Resumo Profissional',
       professionalSummary:
-        'Desenvolvedor com formação em Ciência da Computação pela UEM, com experiência em desenvolvimento de aplicações web modernas utilizando React, Node.js e APIs REST. Possuo forte base em Python e Machine Learning, aplicando soluções práticas em automação e análise de dados. Busco minha primeira oportunidade como desenvolvedor júnior, onde possa contribuir com soluções eficientes e evoluir continuamente na área.',
+        'Desenvolvedor com formação em Ciência da Computação pela UEM, com experiência em desenvolvimento de aplicações web modernas utilizando React, Node.js e APIs REST. Possuo forte base em Python e Machine Learning, aplicando soluções práticas em automação e análise de dados. Busco oportunidades para contribuir com soluções eficientes e evoluir continuamente na área.',
       experienceTitle: 'Experiência',
       experience: [
         {
@@ -391,11 +416,11 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
           external: true,
         },
         {
-          id: 'whatsapp',
-          label: 'WhatsApp',
-          description: 'Canal rápido para alinhamento inicial, briefing e próximos passos.',
-          cta: 'Iniciar conversa',
-          url: 'https://wa.me/5544991812069',
+          id: 'linkedin',
+          label: 'LinkedIn',
+          description: 'Acompanhe trajetória profissional, experiência e networking técnico.',
+          cta: 'Abrir perfil',
+          url: 'https://www.linkedin.com/in/rvdonkey',
           external: true,
         },
       ],
@@ -410,10 +435,10 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
     },
     about: {
       name: 'Andrei Roberto da Costa',
-      role: 'Junior Developer | Web, AI, and Python Backend',
-      bio: 'Computer Science graduate from UEM with experience building modern web applications using React, Node.js, and REST APIs. Strong background in Python and Machine Learning, applying practical solutions for automation and data analysis. Currently seeking a first junior developer opportunity to contribute with efficient solutions and grow continuously.',
+      role: 'Developer | Web, AI, and Python Backend',
+      bio: 'Computer Science graduate from UEM with experience building modern web applications using React, Node.js, and REST APIs. Strong background in Python and Machine Learning, applying practical solutions for automation and data analysis. Currently seeking opportunities to contribute with efficient solutions and grow continuously.',
       location: 'Maringa - PR, Brazil',
-      availability: 'Open to junior roles and freelance opportunities',
+      availability: 'Open to opportunities and freelance projects',
       email: 'arcodeworks@gmail.com',
       technicalSkillsTitle: 'Technical Skills',
       technicalSkills: [
@@ -453,11 +478,11 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
     },
     curriculum: {
       name: 'Andrei Roberto da Costa',
-      role: 'Junior Developer | Web, AI, and Python Backend',
+      role: 'Developer | Web, AI, and Python Backend',
       downloadLabel: 'Download PDF',
       professionalSummaryTitle: 'Professional Summary',
       professionalSummary:
-        'Computer Science graduate from UEM with experience in modern web applications using React, Node.js, and REST APIs. Strong foundation in Python and Machine Learning, with practical work in automation and data analysis. Looking for a first junior developer position to deliver efficient solutions and keep growing.',
+        'Computer Science graduate from UEM with experience in modern web applications using React, Node.js, and REST APIs. Strong foundation in Python and Machine Learning, with practical work in automation and data analysis. Looking for opportunities to deliver efficient solutions and keep growing.',
       experienceTitle: 'Experience',
       experience: [
         {
@@ -566,11 +591,11 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
           external: true,
         },
         {
-          id: 'whatsapp',
-          label: 'WhatsApp',
-          description: 'Fast channel for initial alignment, briefing, and next steps.',
-          cta: 'Start chat',
-          url: 'https://wa.me/5544991812069',
+          id: 'linkedin',
+          label: 'LinkedIn',
+          description: 'Follow professional trajectory, experience, and technical networking.',
+          cta: 'Open profile',
+          url: 'https://www.linkedin.com/in/rvdonkey',
           external: true,
         },
       ],
@@ -578,6 +603,267 @@ export const PORTFOLIO_CONTENT: Record<Locale, PortfolioContent> = {
   },
 };
 
-export function getPortfolioContent(locale: Locale) {
-  return PORTFOLIO_CONTENT[locale];
+function normalizeSlug(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function localeBucket(locale: Locale): 'pt' | 'en' {
+  return locale === 'pt-BR' ? 'pt' : 'en';
+}
+
+function parseJsonRaw<T>(raw: string, fallback: T): T {
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+function extractContactLinks(markdown: string): Array<{ label: string; url: string }> {
+  const sectionMatch = markdown.match(/##\s+(Contato|Contact)\s*([\s\S]*)$/i);
+  if (!sectionMatch) return [];
+
+  const links: Array<{ label: string; url: string }> = [];
+  const regex = /^-\s*([^:]+):\s*(https?:\/\/\S+)/gm;
+
+  for (const match of sectionMatch[2].matchAll(regex)) {
+    const label = match[1]?.trim();
+    const url = match[2]?.trim();
+    if (label && url) {
+      links.push({ label, url });
+    }
+  }
+
+  return links;
+}
+
+function toContactChannels(
+  locale: Locale,
+  links: Array<{ label: string; url: string }>,
+  fallback: PortfolioContent['contact']['channels']
+): PortfolioContent['contact']['channels'] {
+  if (!links.length) return fallback;
+
+  const mapPT = {
+    github: { description: 'Explore projetos reais, histórico técnico e padrões de arquitetura.', cta: 'Abrir perfil' },
+    linkedin: { description: 'Acompanhe trajetória profissional, experiência e networking técnico.', cta: 'Abrir perfil' },
+    portfolio: { description: 'Veja o código-fonte completo deste portfólio e decisões de implementação.', cta: 'Abrir repositório' },
+  };
+  const mapEN = {
+    github: { description: 'Review real projects, technical depth, and architecture standards.', cta: 'Open profile' },
+    linkedin: { description: 'Follow professional trajectory, experience, and technical networking.', cta: 'Open profile' },
+    portfolio: { description: 'See the full source code of this portfolio and implementation decisions.', cta: 'Open repository' },
+  };
+
+  const localization = locale === 'pt-BR' ? mapPT : mapEN;
+
+  return links.map(({ label, url }) => {
+    const normalized = normalizeSlug(label);
+    const kind = normalized.includes('linkedin')
+      ? 'linkedin'
+      : normalized.includes('github')
+      ? 'github'
+      : normalized.includes('portfolio')
+      ? 'portfolio'
+      : 'portfolio';
+    const copy = localization[kind];
+
+    return {
+      id: normalized || kind,
+      label,
+      description: copy.description,
+      cta: copy.cta,
+      url,
+      external: true,
+    };
+  });
+}
+
+interface ExternalContentBundle {
+  about: string;
+  bioShort: string;
+  bioLong: string;
+  skills: ExternalSkillCategory[];
+  projects: ExternalProject[];
+}
+
+function mergeExternalContent(
+  base: PortfolioContent,
+  locale: Locale,
+  external: ExternalContentBundle,
+  projectsMeta: ExternalProjectsMeta
+) {
+  const merged: PortfolioContent = structuredClone(base);
+
+  const flatSkills = Array.from(
+    new Set(
+      external.skills
+        .flatMap((group) => group.items || [])
+        .map((item) => item.trim())
+        .filter(Boolean)
+    )
+  );
+
+  if (external.bioShort.trim()) {
+    merged.about.bio = external.bioShort.trim();
+  }
+  if (external.bioLong.trim()) {
+    merged.curriculum.professionalSummary = external.bioLong.trim();
+  }
+  if (flatSkills.length) {
+    merged.about.technicalSkills = flatSkills;
+    merged.curriculum.technicalSkills = flatSkills;
+  }
+
+  if (external.projects.length) {
+    const byId = new Map(external.projects.map((project) => [project.id, project]));
+    const orderedIds =
+      projectsMeta.order && projectsMeta.order.length
+        ? projectsMeta.order
+        : external.projects.map((project) => project.id);
+    const seen = new Set<string>();
+    const orderedProjects: ExternalProject[] = [];
+
+    for (const id of orderedIds) {
+      const project = byId.get(id);
+      if (!project || seen.has(id)) continue;
+      orderedProjects.push(project);
+      seen.add(id);
+    }
+
+    for (const project of external.projects) {
+      if (seen.has(project.id)) continue;
+      orderedProjects.push(project);
+      seen.add(project.id);
+    }
+
+    merged.projects.items = orderedProjects.map((project, index) => ({
+      id: project.id || index + 1,
+      title: project.title,
+      description: project.summary || 'Projeto público hospedado no GitHub.',
+      image: project.image || `https://picsum.photos/seed/${project.id || index}/600/400`,
+      tags: (project.tags || ['github']).map((tag) => String(tag)),
+      liveUrl: project.links?.demo || undefined,
+      repositoryUrl: project.links?.github || undefined,
+    }));
+
+    const featuredIds = projectsMeta.featured && projectsMeta.featured.length ? projectsMeta.featured : [];
+    const featuredProjects = featuredIds
+      .map((id) => byId.get(id))
+      .filter((project): project is ExternalProject => Boolean(project));
+
+    if (featuredProjects.length) {
+      merged.projects.favorites = featuredProjects.map((project) => ({
+        id: project.id,
+        title: project.title,
+        summary: project.summary || 'Projeto público hospedado no GitHub.',
+        highlights: project.highlights && project.highlights.length ? project.highlights : [project.summary || project.title],
+        stack: project.stack && project.stack.length ? project.stack : (project.tags || []).slice(0, 6),
+        repositoryUrl: project.links?.github || undefined,
+      }));
+    }
+  }
+
+  const links = extractContactLinks(external.about);
+  merged.contact.channels = toContactChannels(locale, links, merged.contact.channels);
+
+  return merged;
+}
+
+const RAW_BASE_URL = (
+  import.meta.env.VITE_PORTFOLIO_CONTENT_BASE_URL ||
+  'https://raw.githubusercontent.com/NullCipherr/portfolio-content/main'
+).replace(/\/+$/, '');
+
+const CONTENT_CACHE: Record<Locale, PortfolioContent> = {
+  'pt-BR': PORTFOLIO_CONTENT['pt-BR'],
+  'en-US': PORTFOLIO_CONTENT['en-US'],
+};
+
+const LOADING_BY_LOCALE: Partial<Record<Locale, Promise<PortfolioContent>>> = {};
+
+function buildRawUrl(locale: Locale, file: string) {
+  return `${RAW_BASE_URL}/content/${localeBucket(locale)}/${file}`;
+}
+
+async function fetchTextWithFallback(url: string, fallback: string): Promise<string> {
+  try {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) return fallback;
+    return await response.text();
+  } catch {
+    return fallback;
+  }
+}
+
+async function fetchJsonWithFallback<T>(url: string, fallback: T): Promise<T> {
+  const text = await fetchTextWithFallback(url, '');
+  if (!text) return fallback;
+  return parseJsonRaw<T>(text, fallback);
+}
+
+async function loadExternalBundle(locale: Locale): Promise<ExternalContentBundle> {
+  const [about, bioShort, bioLong, skills, projects] = await Promise.all([
+    fetchTextWithFallback(buildRawUrl(locale, 'about.md'), ''),
+    fetchTextWithFallback(buildRawUrl(locale, 'bio-short.md'), ''),
+    fetchTextWithFallback(buildRawUrl(locale, 'bio-long.md'), ''),
+    fetchJsonWithFallback<ExternalSkillCategory[]>(buildRawUrl(locale, 'skills.json'), []),
+    fetchJsonWithFallback<ExternalProject[]>(buildRawUrl(locale, 'projects.json'), []),
+  ]);
+
+  return { about, bioShort, bioLong, skills, projects };
+}
+
+async function loadProjectsMeta(): Promise<ExternalProjectsMeta> {
+  return fetchJsonWithFallback<ExternalProjectsMeta>(`${RAW_BASE_URL}/meta/projects-meta.json`, {});
+}
+
+async function ensurePortfolioContent(locale: Locale): Promise<PortfolioContent> {
+  if (LOADING_BY_LOCALE[locale]) {
+    return LOADING_BY_LOCALE[locale] as Promise<PortfolioContent>;
+  }
+
+  LOADING_BY_LOCALE[locale] = (async () => {
+    const base = PORTFOLIO_CONTENT[locale];
+    const [external, meta] = await Promise.all([loadExternalBundle(locale), loadProjectsMeta()]);
+    const merged = mergeExternalContent(base, locale, external, meta);
+    CONTENT_CACHE[locale] = merged;
+    return merged;
+  })();
+
+  return LOADING_BY_LOCALE[locale] as Promise<PortfolioContent>;
+}
+
+export function getPortfolioContent(locale: Locale): PortfolioContent {
+  return CONTENT_CACHE[locale] || PORTFOLIO_CONTENT[locale];
+}
+
+export function usePortfolioContent(locale: Locale): PortfolioContent {
+  const [content, setContent] = React.useState<PortfolioContent>(() => getPortfolioContent(locale));
+
+  React.useEffect(() => {
+    let isActive = true;
+    setContent(getPortfolioContent(locale));
+
+    ensurePortfolioContent(locale)
+      .then((nextContent) => {
+        if (!isActive) return;
+        setContent(nextContent);
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setContent(getPortfolioContent(locale));
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [locale]);
+
+  return content;
 }

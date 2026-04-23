@@ -4,13 +4,13 @@
  */
 import React from 'react';
 import { Mail, MapPin, Briefcase, Sparkles, Code2 } from 'lucide-react';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 import { useSettings } from '@/features/system/contexts/SettingsContext';
 import { cn } from '@/shared/lib/utils';
 
 export function About() {
   const { locale } = useSettings();
-  const { about, personalData } = getPortfolioContent(locale);
+  const { about, personalData } = usePortfolioContent(locale);
   const initials = about.name
     .split(' ')
     .filter(Boolean)

@@ -12,6 +12,24 @@
 
 ---
 
+## Repositório Central de Conteúdo (SSOT)
+
+O `portfolio-os` consome conteúdo de um repositório SSOT externo:
+
+- `https://github.com/NullCipherr/portfolio-content`
+
+Endpoints utilizados via raw:
+
+- `https://raw.githubusercontent.com/NullCipherr/portfolio-content/main/content/pt/about.md`
+- `https://raw.githubusercontent.com/NullCipherr/portfolio-content/main/content/pt/projects.json`
+- `https://raw.githubusercontent.com/NullCipherr/portfolio-content/main/meta/projects-meta.json`
+
+Configuração opcional (`.env`):
+
+- `VITE_PORTFOLIO_CONTENT_BASE_URL=https://raw.githubusercontent.com/NullCipherr/portfolio-content/main`
+
+---
+
 ## Documentation
 
 Project documentation is modularized for easier onboarding and maintenance.

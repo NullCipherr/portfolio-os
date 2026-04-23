@@ -4,12 +4,12 @@
  */
 import React from 'react';
 import { Download, Briefcase, GraduationCap, Code2, Award } from 'lucide-react';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 import { useSettings } from '@/features/system/contexts/SettingsContext';
 
 export function Curriculum() {
   const { locale } = useSettings();
-  const { curriculum } = getPortfolioContent(locale);
+  const { curriculum } = usePortfolioContent(locale);
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-y-auto">

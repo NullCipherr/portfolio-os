@@ -197,7 +197,6 @@ export function TerminalApp({ openWindow }: TerminalProps) {
         break;
       case 'about':
       case 'projects':
-      case 'contact':
       case 'personalize':
       case 'terminal':
         openWindow(baseCmd as AppId);

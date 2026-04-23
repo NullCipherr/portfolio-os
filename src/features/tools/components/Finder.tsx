@@ -12,7 +12,7 @@ import { cn } from '@/shared/lib/utils';
 import { useToast } from '@/features/system/contexts/ToastContext';
 import { useSettings } from '@/features/system/contexts/SettingsContext';
 import { MESSAGES } from '@/shared/i18n/messages';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 
 type FileItem = {
   id: string;
@@ -45,7 +45,7 @@ export function Finder({ openWindow }: { openWindow: (id: string) => void }) {
   const { addToast } = useToast();
   const { locale } = useSettings();
   const text = MESSAGES[locale];
-  const portfolio = getPortfolioContent(locale);
+  const portfolio = usePortfolioContent(locale);
 
   const finderData = useMemo(() => {
     const folders = text.finder.folders;

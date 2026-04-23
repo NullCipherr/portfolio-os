@@ -25,7 +25,7 @@ import { About } from '@/features/portfolio/components/About';
 import { Projects } from '@/features/portfolio/components/Projects';
 import { Contact } from '@/features/portfolio/components/Contact';
 import { Curriculum } from '@/features/portfolio/components/Curriculum';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 import { Browser } from '@/features/tools/components/Browser';
 import { Finder } from '@/features/tools/components/Finder';
 import { Personalize } from '@/features/tools/components/Personalize';
@@ -50,7 +50,7 @@ const DEFAULT_WINDOW_SIZE = { width: 860, height: 640 } as const;
 
 export function useAppRegistry() {
   const { locale } = useSettings();
-  const content = getPortfolioContent(locale);
+  const content = usePortfolioContent(locale);
   const text = MESSAGES[locale];
 
   const portfolioApps: AppConfig[] = [

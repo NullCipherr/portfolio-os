@@ -51,7 +51,8 @@ export function Window({
     startPosition: { x: number; y: number };
   } | null>(null);
   const [isResizing, setIsResizing] = useState(false);
-  const { lightSurface, darkSurface, windowTransparency } = useSettings();
+  const { lightSurface, darkSurface, windowTransparency, windowChromeStyle } = useSettings();
+  const isMacLike = windowChromeStyle === 'macos';
 
   if (windowState.isMinimized) return null;
 
@@ -271,7 +272,7 @@ export function Window({
       {/* Titlebar */}
       <div
         className={cn(
-          "flex items-center justify-between px-4 py-2 border-b select-none touch-none",
+          "px-4 py-2 border-b select-none touch-none",
           windowTransparency
             ? "bg-white/50 dark:bg-gray-800/50 border-black/5 dark:border-white/5"
             : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
@@ -279,29 +280,60 @@ export function Window({
         onPointerDown={(e) => dragControls.start(e)}
         onDoubleClick={onMaximize}
       >
-        <div className="flex items-center gap-2">
-          <appConfig.icon className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{appConfig.title}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={(e) => { e.stopPropagation(); onMinimize(); }}
-            className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
-          >
-            <Minus className="w-4 h-4" />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onMaximize(); }}
-            className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
-          >
-            <Square className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-red-500 hover:text-white rounded-md transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+        <div className={cn("flex items-center w-full", isMacLike ? "justify-start gap-3" : "justify-between")}>
+          {isMacLike ? (
+            <>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={(e) => { e.stopPropagation(); onClose(); }}
+                  className="w-3 h-3 rounded-full bg-[#ff5f57] border border-[#e0443e]/80 transition-opacity hover:opacity-85"
+                  aria-label="Close window"
+                />
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+                  className="w-3 h-3 rounded-full bg-[#febb2e] border border-[#d2a126]/80 transition-opacity hover:opacity-85"
+                  aria-label="Minimize window"
+                />
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMaximize(); }}
+                  className="w-3 h-3 rounded-full bg-[#28c840] border border-[#1ea934]/80 transition-opacity hover:opacity-85"
+                  aria-label="Maximize window"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 min-w-0">
+                <appConfig.icon className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">{appConfig.title}</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <appConfig.icon className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{appConfig.title}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+                  className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMaximize(); }}
+                  className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
+                >
+                  <Square className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onClose(); }}
+                  className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-red-500 hover:text-white rounded-md transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

@@ -10,6 +10,7 @@ export type GlassColor = 'white' | 'blue' | 'purple' | 'green' | 'rose' | 'amber
 export type LightSurfaceColor = 'white' | 'cream' | 'gray' | 'rose' | 'sky';
 export type DarkSurfaceColor = 'gray' | 'slate' | 'black' | 'zinc' | 'indigo';
 export type UIFont = 'system' | 'segoe' | 'poppins' | 'jetbrains';
+export type WindowChromeStyle = 'windows' | 'macos';
 
 export const UI_FONT_FAMILIES: Record<UIFont, string> = {
   system: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -71,6 +72,8 @@ interface SettingsContextType {
   setDarkSurface: (color: DarkSurfaceColor) => void;
   windowTransparency: boolean;
   setWindowTransparency: (enabled: boolean) => void;
+  windowChromeStyle: WindowChromeStyle;
+  setWindowChromeStyle: (style: WindowChromeStyle) => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
   uiFont: UIFont;
@@ -99,6 +102,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [lightSurface, setLightSurface] = useState<LightSurfaceColor>(() => getSaved('os_lightSurface', 'white'));
   const [darkSurface, setDarkSurface] = useState<DarkSurfaceColor>(() => getSaved('os_darkSurface', 'gray'));
   const [windowTransparency, setWindowTransparency] = useState<boolean>(() => getSaved('os_windowTransparency', true));
+  const [windowChromeStyle, setWindowChromeStyle] = useState<WindowChromeStyle>(() => getSaved('os_windowChromeStyle', 'windows'));
   const [locale, setLocale] = useState<Locale>(() => getSaved('os_locale', 'pt-BR'));
   const [uiFont, setUIFont] = useState<UIFont>(() => getSaved('os_uiFont', 'poppins'));
 
@@ -121,6 +125,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     localStorage.setItem('os_windowTransparency', JSON.stringify(windowTransparency));
   }, [windowTransparency]);
+  useEffect(() => {
+    localStorage.setItem('os_windowChromeStyle', JSON.stringify(windowChromeStyle));
+  }, [windowChromeStyle]);
 
   useEffect(() => { localStorage.setItem('os_wallpaper', JSON.stringify(wallpaper)); }, [wallpaper]);
   useEffect(() => { localStorage.setItem('os_iconSize', JSON.stringify(iconSize)); }, [iconSize]);
@@ -146,6 +153,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       lightSurface, setLightSurface,
       darkSurface, setDarkSurface,
       windowTransparency, setWindowTransparency,
+      windowChromeStyle, setWindowChromeStyle,
       locale, setLocale,
       uiFont, setUIFont
     }}>

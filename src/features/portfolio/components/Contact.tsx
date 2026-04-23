@@ -3,8 +3,8 @@
  * Portfolio OS module with a specific architectural responsibility.
  */
 import React from 'react';
-import { ArrowUpRight, Github, MessageCircle, Rocket } from 'lucide-react';
-import { getPortfolioContent } from '@/features/portfolio/config/portfolioContent';
+import { ArrowUpRight, Github, Linkedin, Rocket } from 'lucide-react';
+import { usePortfolioContent } from '@/features/portfolio/config/portfolioContent';
 import { useSettings } from '@/features/system/contexts/SettingsContext';
 import { cn } from '@/shared/lib/utils';
 
@@ -15,13 +15,13 @@ interface ChannelIconProps {
 
 function ChannelIcon({ id, className }: ChannelIconProps) {
   if (id === 'github') return <Github className={className} />;
-  if (id === 'whatsapp') return <MessageCircle className={className} />;
+  if (id === 'linkedin') return <Linkedin className={className} />;
   return <Rocket className={className} />;
 }
 
 export function Contact() {
   const { locale } = useSettings();
-  const { contact } = getPortfolioContent(locale);
+  const { contact } = usePortfolioContent(locale);
 
   return (
     <section className="h-full overflow-auto bg-transparent">

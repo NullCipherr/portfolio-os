@@ -30,6 +30,7 @@ export function Personalize() {
     lightSurface, setLightSurface,
     darkSurface, setDarkSurface,
     windowTransparency, setWindowTransparency,
+    windowChromeStyle, setWindowChromeStyle,
     locale, setLocale,
     uiFont, setUIFont
   } = useSettings();
@@ -254,6 +255,41 @@ export function Personalize() {
                   )}
                 >
                   {text.personalize.transparencyOff}
+                </button>
+              </div>
+            </section>
+
+            {/* Window Manager Style */}
+            <section>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-200 mb-4">{text.personalize.windowManagerStyle}</h3>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setWindowChromeStyle('windows');
+                    addToast(text.personalize.toastWindowStyleWindows, 'success');
+                  }}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-colors",
+                    windowChromeStyle === 'windows'
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400"
+                      : "border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                  )}
+                >
+                  {text.personalize.windowStyleWindows}
+                </button>
+                <button
+                  onClick={() => {
+                    setWindowChromeStyle('macos');
+                    addToast(text.personalize.toastWindowStyleMacos, 'success');
+                  }}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-colors",
+                    windowChromeStyle === 'macos'
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400"
+                      : "border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                  )}
+                >
+                  {text.personalize.windowStyleMacos}
                 </button>
               </div>
             </section>
