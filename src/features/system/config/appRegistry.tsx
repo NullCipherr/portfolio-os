@@ -29,7 +29,6 @@ import { usePortfolioContent } from '@/features/portfolio/config/portfolioConten
 import { Browser } from '@/features/tools/components/Browser';
 import { Finder } from '@/features/tools/components/Finder';
 import { Personalize } from '@/features/tools/components/Personalize';
-import { TerminalApp } from '@/features/tools/components/Terminal';
 import { WebIframe } from '@/features/tools/components/WebIframe';
 import { Rito } from '@/features/tools/components/Rito';
 import { MusicPlayer } from '@/features/media/components/MusicPlayer';
@@ -47,11 +46,23 @@ interface RenderAppContentParams {
 }
 
 const DEFAULT_WINDOW_SIZE = { width: 860, height: 640 } as const;
+const DEFAULT_PORTFOLIO_TERMINAL_URL = 'https://nullcipherr.github.io/portfolio-terminal/';
 
 export function useAppRegistry() {
   const { locale } = useSettings();
   const content = usePortfolioContent(locale);
   const text = MESSAGES[locale];
+  const portfolioTerminalUrl = import.meta.env.VITE_PORTFOLIO_TERMINAL_URL || DEFAULT_PORTFOLIO_TERMINAL_URL;
+  const portfolioTerminalEmbedUrl = (() => {
+    try {
+      const url = new URL(portfolioTerminalUrl);
+      url.searchParams.set('embed', '1');
+      return url.toString();
+    } catch {
+      const separator = portfolioTerminalUrl.includes('?') ? '&' : '?';
+      return `${portfolioTerminalUrl}${separator}embed=1`;
+    }
+  })();
 
   const portfolioApps: AppConfig[] = [
     { id: 'about', title: content.windows.about, icon: User, defaultSize: DEFAULT_WINDOW_SIZE },
@@ -102,7 +113,7 @@ export function useAppRegistry() {
       case 'personalize':
         return <Personalize />;
       case 'terminal':
-        return <TerminalApp openWindow={openWindow} />;
+        return <WebIframe src={portfolioTerminalEmbedUrl} title={text.appTitles.terminal} />;
       case 'minesweeper':
         return <WebIframe src="https://9893.github.io/minesweeper/" title={text.appTitles.minesweeper} />;
       case 'solitaire':
